@@ -1,0 +1,4 @@
+[core]
+    remote = gmcdata
+['remote "gmcdata"']
+    url = s3://akshatremotes3

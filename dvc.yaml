@@ -7,6 +7,8 @@ stages:
     - data/raw
   feature_processing:
     cmd: python src/features/feature_processing.py
+    params:
+    - feature_processing.test_size
     deps:
     - data/raw
     - src/features/feature_processing.py
@@ -15,6 +17,13 @@ stages:
     - models/pipe.pkl
   model_building:
     cmd: python src/model/model_building.py
+    params:
+      - model_building.n_estimators
+      - model_building.max_depth
+      - model_building.min_samples_split
+      - model_building.min_samples_leaf
+      - model_building.max_features
+      - model_building.bootstrap
     deps:
     - data/processed
     - models/pipe.pkl
