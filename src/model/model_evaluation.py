@@ -86,5 +86,6 @@ def main() -> None:
         logger.error('some error occured while executing the main function ',e)
         raise
 
+
 if __name__ == '__main__':
     main()
