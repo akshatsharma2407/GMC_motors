@@ -3,17 +3,18 @@ import numpy as np
 import pandas as pd
 import pickle
 import json
+from sklearn.base import BaseEstimator
 
-def load_model(path):
+def load_model(path : str) -> BaseEstimator:
     with open(path,'rb') as f:
         model = pickle.load(f)
     return model
 
-def load_data(path):
+def load_data(path : str) -> pd.DataFrame:
     test_df = pd.read_csv(path)
     return test_df
 
-def predict(test_df,model):
+def predict(test_df : pd.DataFrame,model : BaseEstimator) -> dict:
     xtest = test_df.drop(columns='Price($)')
     ytest = test_df['Price($)']
 
@@ -27,11 +28,11 @@ def predict(test_df,model):
     
     return metrics_dict
 
-def save_metrics(path,metrics_dict):
+def save_metrics(path : str,metrics_dict : dict) -> None:
     with open(path,'w') as f:
         json.dump(metrics_dict,f,indent=4)
 
-def main():
+def main() -> None:
     model = load_model('models/RandomForest.pkl')
     test_df = load_data('data/processed/test_processed_df.csv')
     metrics_dict = predict(test_df,model)

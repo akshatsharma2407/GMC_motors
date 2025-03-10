@@ -11,17 +11,17 @@ import os
 import pickle
 
 
-def load_data(path):
+def load_data(path : str) -> pd.DataFrame:
     df = pd.read_csv(path)
     return df
 
-def splitting_data(df):
+def splitting_data(df : pd.DataFrame) -> tuple[pd.DataFrame,pd.DataFrame,pd.DataFrame,pd.DataFrame]:
     df['AGE OF CAR'] = df['AGE OF CAR'].astype(str)
     df['MODEL'] = df['MODEL'].astype(str)
     xtrain,xtest,ytrain,ytest = train_test_split(df.drop(columns=['PRICE($)']),df['PRICE($)'],random_state=42,test_size=0.2)
     return xtrain,xtest,ytrain,ytest
 
-def ColumnTransformers():
+def ColumnTransformers() -> tuple[ColumnTransformer,ColumnTransformer]:
     ct1 = ColumnTransformer(
         [
             ('RatingImputer',SimpleImputer(missing_values=-1,strategy='mean'),['RATING']),
@@ -50,7 +50,7 @@ def ColumnTransformers():
 
     return ct1,ct2
 
-def CreatingAndExexutingPipeline(ct1,ct2,xtrain,xtest,ytrain,ytest):
+def CreatingAndExexutingPipeline(ct1 : ColumnTransformer,ct2 : ColumnTransformer,xtrain : pd.DataFrame,xtest : pd.DataFrame,ytrain : pd.DataFrame,ytest : pd.DataFrame) -> tuple[Pipeline,pd.DataFrame,pd.DataFrame]:
     pipe = Pipeline([
         ('ct1',ct1),
         ('ct2',ct2)
@@ -63,19 +63,19 @@ def CreatingAndExexutingPipeline(ct1,ct2,xtrain,xtest,ytrain,ytest):
     xtest_trans['Price($)'] = ytest
     return pipe,xtrain_trans,xtest_trans #now xtrain_trans is train_df,  xtest_trans is test_df
 
-def save_data(train_df,test_df,path):
+def save_data(train_df : pd.DataFrame,test_df : pd.DataFrame,path : str) -> None:
     processed_data_path = os.path.join(path,'processed')
     os.makedirs(processed_data_path,exist_ok=True)
     train_df.to_csv(os.path.join(processed_data_path,'train_processed_df.csv'),index=False)
     test_df.to_csv(os.path.join(processed_data_path,'test_processed_df.csv'),index=False)
 
 
-def save_pipeline(pipe,path_to_save):
+def save_pipeline(pipe : Pipeline,path_to_save : str) -> None:
     with open(path_to_save, "wb") as f:
         pickle.dump(pipe, f)
 
 
-def main():
+def main() -> None:
     df = load_data('data/raw/GMC_DATA.csv')
     xtrain,xtest,ytrain,ytest = splitting_data(df)
     ct1,ct2 = ColumnTransformers()
