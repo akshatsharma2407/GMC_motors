@@ -81,7 +81,7 @@ def main():
     ct1,ct2 = ColumnTransformers()
     pipe,train_df,test_df = CreatingAndExexutingPipeline(ct1,ct2,xtrain,xtest,ytrain,ytest)
     save_data(train_df,test_df,'./data')
-    save_pipeline(pipe,'./models/pickle.pkl')
+    save_pipeline(pipe,'./models/pipe.pkl')
 
 if __name__ == '__main__':
     main()

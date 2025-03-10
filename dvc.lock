@@ -1,0 +1,79 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/data/data_ingestion.py
+    deps:
+    - path: src/data/data_ingestion.py
+      hash: md5
+      md5: 3550be73de3bae1c3275c42f07e40851
+      size: 711
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: a54690cf6f32a13bf773f7335a88cce1.dir
+      size: 931368
+      nfiles: 1
+  feature_processing:
+    cmd: python src/features/feature_processing.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: a54690cf6f32a13bf773f7335a88cce1.dir
+      size: 931368
+      nfiles: 1
+    - path: src/features/feature_processing.py
+      hash: md5
+      md5: 71ce9a20bc43e9364e43a911ab370336
+      size: 3358
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 7c9e0b81bbc3fdc586e8f748dcd1415c.dir
+      size: 1854074
+      nfiles: 2
+    - path: models/pipe.pkl
+      hash: md5
+      md5: a6ab54af1c48556e21f115dd3785b2df
+      size: 145960
+  model_building:
+    cmd: python src/model/model_building.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 7c9e0b81bbc3fdc586e8f748dcd1415c.dir
+      size: 1854074
+      nfiles: 2
+    - path: models/pipe.pkl
+      hash: md5
+      md5: a6ab54af1c48556e21f115dd3785b2df
+      size: 145960
+    - path: src/model/model_building.py
+      hash: md5
+      md5: 8832ec5896b438747603795d9c2dea75
+      size: 718
+    outs:
+    - path: models/RandomForest.pkl
+      hash: md5
+      md5: 4e6b827974a43b894376f8b07ebd083e
+      size: 41983340
+  model_evaluation:
+    cmd: python src/model/model_evaluation.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 7c9e0b81bbc3fdc586e8f748dcd1415c.dir
+      size: 1854074
+      nfiles: 2
+    - path: models/RandomForest.pkl
+      hash: md5
+      md5: 4e6b827974a43b894376f8b07ebd083e
+      size: 41983340
+    - path: src/model/model_evaluation.py
+      hash: md5
+      md5: 79477c79a5742c292c220076dffbe4ad
+      size: 1086
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: 9870c27d92224c0ac72222e7c7423361
+      size: 133
