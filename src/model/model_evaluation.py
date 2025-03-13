@@ -6,6 +6,10 @@ import json
 from sklearn.base import BaseEstimator
 import logging
 import os 
+import mlflow
+import dagshub
+from sklearn.pipeline import Pipeline
+import mlflow.sklearn
 
 logger = logging.getLogger(os.path.basename(__file__))
 logger.setLevel('DEBUG')
@@ -34,6 +38,17 @@ def load_model(path : str) -> BaseEstimator:
         logger.error('model.pkl not found')
     except Exception as e:
         logger.error('some error occured while loading model.pkl ',e)
+
+def load_pipe(path : str) -> Pipeline:
+    try:
+        with open(path,'rb') as f:
+            pipe = pickle.load(f)
+        logger.debug('pipe.pkl loaded')
+        return pipe
+    except FileNotFoundError:
+        logger.error('pipe.pkl not found')
+    except Exception as e:
+        logger.error('some error occured while loading the pipe')
 
 def load_data(path : str) -> pd.DataFrame:
     try:
@@ -77,10 +92,24 @@ def save_metrics(path : str,metrics_dict : dict) -> None:
 
 def main() -> None:
     try:
+
+        dagshub.init(repo_owner='akshatsharma2407', repo_name='GMC_motors', mlflow=True)
+        mlflow.set_tracking_uri('https://dagshub.com/akshatsharma2407/GMC_motors.mlflow')
+
+        mlflow.set_experiment(experiment_name='Exp_for_Production')
+        mlflow.start_run()
+
         model = load_model('models/RandomForest.pkl')
         test_df = load_data('data/processed/test_processed_df.csv')
+        pipe = load_pipe('models/pipe.pkl')
+
         metrics_dict = predict(test_df,model)
         save_metrics('reports/metrics.json',metrics_dict)
+
+        mlflow.sklearn.load_model(model,'RF_regressor')
+        mlflow.sklearn.load_model(pipe,'transformations')
+        mlflow.log_metrics(metrics_dict)
+        mlflow.end_run()
         logger.debug('main function executed successfully')
     except Exception as e:
         logger.error('some error occured while executing the main function ',e)
