@@ -90,6 +90,16 @@ def save_metrics(path : str,metrics_dict : dict) -> None:
         logger.error('some error occured while saving the evaluation metrics', e)
         raise
 
+def save_model_info(run_id : str, model_name : str, file_path : str) -> None:
+    try:
+        model_info = {'run_id' : run_id, 'model_path' : model_name}
+        with open(file_path,'w') as f:
+            json.dump(model_info,f,indent=4)
+        logger.debug('model info saved')
+    except Exception as e:
+        logger.error('some error occured while saving the model info', e)
+        raise
+
 def main() -> None:
     try:
 
@@ -97,22 +107,23 @@ def main() -> None:
         mlflow.set_tracking_uri('https://dagshub.com/akshatsharma2407/GMC_motors.mlflow')
 
         mlflow.set_experiment(experiment_name='Exp_for_Production')
-        mlflow.start_run()
+        with mlflow.start_run() as run :
 
-        model = load_model('models/RandomForest.pkl')
-        test_df = load_data('data/processed/test_processed_df.csv')
-        pipe = load_pipe('models/pipe.pkl') # loaded only for exp tracking purpose, so that we can directly push the model and pipe to production
-        
-        metrics_dict = predict(test_df,model)
+            model = load_model('models/RandomForest.pkl')
+            test_df = load_data('data/processed/test_processed_df.csv')
+            pipe = load_pipe('models/pipe.pkl') # loaded only for exp tracking purpose, so that we can directly push the model and pipe to production
+            
+            metrics_dict = predict(test_df,model)
 
-        full_pipeline = Pipeline(pipe.steps + [('model',model)]) # adding model in pipeline 
+            full_pipeline = Pipeline(pipe.steps + [('model',model)]) # adding model in pipeline 
 
-        save_metrics('reports/metrics.json',metrics_dict)
+            save_metrics('reports/metrics.json',metrics_dict)
 
-        mlflow.sklearn.log_model(full_pipeline,'transformer+RF_regressor_model')
-        mlflow.log_metrics(metrics_dict)
-        mlflow.end_run()
-        logger.debug('main function executed successfully')
+            mlflow.sklearn.log_model(full_pipeline,'transformer+RF_regressor_model')
+            mlflow.log_metrics(metrics_dict)
+            save_model_info(run.info.run_id,model_name='transformer+RF_regressor_model',file_path='reports/exp_info.json')
+
+            logger.debug('main function executed successfully')
     except Exception as e:
         logger.error('some error occured while executing the main function ',e)
         raise
