@@ -106,8 +106,8 @@ def main() -> None:
         metrics_dict = predict(test_df,model)
         save_metrics('reports/metrics.json',metrics_dict)
 
-        mlflow.sklearn.load_model(model,'RF_regressor')
-        mlflow.sklearn.load_model(pipe,'transformations')
+        mlflow.sklearn.log_model(model,'RF_regressor')
+        mlflow.sklearn.log_model(pipe,'transformations')
         mlflow.log_metrics(metrics_dict)
         mlflow.end_run()
         logger.debug('main function executed successfully')
