@@ -101,13 +101,15 @@ def main() -> None:
 
         model = load_model('models/RandomForest.pkl')
         test_df = load_data('data/processed/test_processed_df.csv')
-        pipe = load_pipe('models/pipe.pkl')
-
+        pipe = load_pipe('models/pipe.pkl') # loaded only for exp tracking purpose, so that we can directly push the model and pipe to production
+        
         metrics_dict = predict(test_df,model)
+
+        full_pipeline = Pipeline(pipe.steps + [('model',model)]) # adding model in pipeline 
+
         save_metrics('reports/metrics.json',metrics_dict)
 
-        mlflow.sklearn.log_model(model,'RF_regressor')
-        mlflow.sklearn.log_model(pipe,'transformations')
+        mlflow.sklearn.log_model(full_pipeline,'transformer+RF_regressor_model')
         mlflow.log_metrics(metrics_dict)
         mlflow.end_run()
         logger.debug('main function executed successfully')
