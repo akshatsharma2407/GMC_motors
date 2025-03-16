@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
           OS:  ['ubuntu-latest','windows-latest','macos-latest']
+          versions: ['3.9','3.10','3.11']
 
     steps:
 
@@ -18,7 +19,7 @@ jobs:
       - name: set up repository
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: ${{ matrix.versions }}
       
       - name : install flake8
         run : |
