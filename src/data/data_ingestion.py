@@ -11,7 +11,9 @@ console_handler.setLevel("DEBUG")
 file_handler = logging.FileHandler("errors.log")
 file_handler.setLevel("DEBUG")
 
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
 
 console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
@@ -36,7 +38,9 @@ def load_data(path: str) -> pd.DataFrame:
 def preprocessing(df: pd.DataFrame) -> pd.DataFrame:
     try:
         df.drop(
-            columns=["PRICE RANGE", "MAKE ORIGIN", "PARENT COMPANY", "IMAGE", "BRAND"],
+            columns=[
+                "PRICE RANGE", "MAKE ORIGIN", "PARENT COMPANY", "IMAGE", "BRAND"
+                ],
             inplace=True,
         )
         df.dropna(inplace=True)
