@@ -58,7 +58,7 @@ def register_model(model_uri, model_name):
         model_version = mlflow.register_model(model_uri, model_name).version
         return model_version, model_name
     except Exception as e:
-        logger.error("some error occured while registering a model")
+        logger.error("some error occured while registering a model", e)
         raise
 
 
@@ -74,7 +74,7 @@ def add_descr_tags(model_name, model_version, description, author_name):
             name=model_name, version=model_version, key="author", value=author_name
         )
     except Exception as e:
-        logger.error("some error occured while adding descr tags")
+        logger.error("some error occured while adding descr tags", e)
         raise
 
 

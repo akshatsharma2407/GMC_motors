@@ -50,7 +50,7 @@ def load_pipe(path: str) -> Pipeline:
     except FileNotFoundError:
         logger.error("pipe.pkl not found")
     except Exception as e:
-        logger.error("some error occured while loading the pipe")
+        logger.error("some error occured while loading the pipe", e)
 
 
 def load_data(path: str) -> pd.DataFrame:
@@ -122,7 +122,9 @@ def main() -> None:
             test_df = load_data("data/processed/test_processed_df.csv")
             pipe = load_pipe(
                 "models/pipe.pkl"
-            )  # loaded only for exp tracking purpose, so that we can directly push the model and pipe to production
+            )  
+            # loaded only for exp tracking purpose, 
+            # so that we can directly push the model and pipe to production
 
             metrics_dict = predict(test_df, model)
 

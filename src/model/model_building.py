@@ -1,6 +1,5 @@
 from sklearn.ensemble import RandomForestRegressor
 import pandas as pd
-import numpy as np
 import pickle
 from sklearn.base import BaseEstimator
 import yaml
@@ -34,7 +33,7 @@ def load_params(path: str):
         logger.error("params.yaml file not found")
         raise
     except Exception as e:
-        logger.error("some error occured while loading params")
+        logger.error("some error occured while loading params", e)
         raise
 
 
@@ -91,7 +90,7 @@ def main() -> None:
         save_model(model, "models/RandomForest.pkl")
         logger.debug("main function executed")
     except Exception as e:
-        logger.critical("some error occured while executing main function")
+        logger.critical("some error occured while executing main function", e)
         raise
 
 

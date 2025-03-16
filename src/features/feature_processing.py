@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.model_selection import train_test_split
@@ -21,7 +20,9 @@ stream_handler.setLevel("DEBUG")
 file_handler = logging.FileHandler("errors.log")
 file_handler.setLevel("DEBUG")
 
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
 
 stream_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
@@ -39,7 +40,7 @@ def load_params(params_path: str) -> float:
         logger.error("params.yaml file not found while loading params")
         raise
     except Exception as e:
-        logger.error("some error occured while loading params")
+        logger.error("some error occured while loading params", e)
         raise
 
 
