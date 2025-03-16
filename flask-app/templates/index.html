@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Details Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        form {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <form action="#" method="post">
+        <h2>Car Details Form</h2>
+
+        <label for="car_name">CAR NAME:</label>
+        <input type="text" id="car_name" name="car_name" required>
+
+        <label for="model_class">MODEL/CLASS:</label>
+        <input type="text" id="model_class" name="model_class" required>
+
+        <label for="model">MODEL:</label>
+        <input type="text" id="model" name="model" required>
+
+        <label for="price">PRICE ($):</label>
+        <input type="number" id="price" name="price" required step="0.01">
+
+        <label for="stock_type">STOCK TYPE:</label>
+        <select id="stock_type" name="stock_type" required>
+            <option value="New">New</option>
+            <option value="Used">Used</option>
+        </select>
+
+        <label for="mileage">MILEAGE:</label>
+        <input type="number" id="mileage" name="mileage" required>
+
+        <label for="age_of_car">AGE OF CAR:</label>
+        <input type="text" id="age_of_car" name="age_of_car" required>
+
+        <label for="rating">RATING:</label>
+        <input type="number" id="rating" name="rating" required step="0.1" min="0" max="5">
+
+        <label for="review">REVIEW:</label>
+        <input type="number" id="review" name="review" required step="0.1">
+
+        <label for="dealer_name">DEALER NAME:</label>
+        <input type="text" id="dealer_name" name="dealer_name" required>
+
+        <label for="dealer_city">DEALER LOCATION (CITY):</label>
+        <input type="text" id="dealer_city" name="dealer_city" required>
+
+        <label for="dealer_state">DEALER LOCATION (STATE):</label>
+        <input type="text" id="dealer_state" name="dealer_state" required>
+
+        <button type="submit">Submit</button>
+    </form>
+
+</body>
+</html>
