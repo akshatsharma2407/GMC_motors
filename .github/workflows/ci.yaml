@@ -48,6 +48,6 @@ jobs:
       
       - name: run pipeline
         env:
-          DAGSHUB_TOK: ${{ secrets.DAGSHUB_TOKEN }}
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
         run : |
           dvc repro
