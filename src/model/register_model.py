@@ -67,9 +67,7 @@ def add_descr_tags(model_name, model_version, description, author_name):
         client = mlflow.tracking.MlflowClient()
 
         client.transition_model_version_stage(
-            name=model_name,
-            version=model_version,
-            stage='Staging'
+            name=model_name, version=model_version, stage="Staging"
         )
 
         client.update_model_version(

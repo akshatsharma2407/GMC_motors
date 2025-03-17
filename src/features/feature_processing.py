@@ -20,9 +20,7 @@ stream_handler.setLevel("DEBUG")
 file_handler = logging.FileHandler("errors.log")
 file_handler.setLevel("DEBUG")
 
-formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 stream_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)

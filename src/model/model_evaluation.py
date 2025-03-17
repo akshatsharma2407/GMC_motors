@@ -120,9 +120,7 @@ def main() -> None:
 
             model = load_model("models/RandomForest.pkl")
             test_df = load_data("data/processed/test_processed_df.csv")
-            pipe = load_pipe(
-                "models/pipe.pkl"
-            )
+            pipe = load_pipe("models/pipe.pkl")
             # loaded only for exp tracking purpose,
             # so that we can directly push the model and pipe to production
 
@@ -134,20 +132,21 @@ def main() -> None:
 
             save_metrics("reports/metrics.json", metrics_dict)
 
-            data_for_signature = pd.read_csv('GMC_MLOPS/data/raw/GMC_DATA.csv').head(1)
-            data_for_signature["AGE OF CAR"] = data_for_signature["AGE OF CAR"].astype(str)
+            data_for_signature = pd.read_csv("GMC_MLOPS/data/raw/GMC_DATA.csv").head(1)
+            data_for_signature["AGE OF CAR"] = data_for_signature["AGE OF CAR"].astype(
+                str
+            )
             data_for_signature["MODEL"] = data_for_signature["MODEL"].astype(str)
-            data_for_signature.drop(columns='PRICE($)',inplace=True)
+            data_for_signature.drop(columns="PRICE($)", inplace=True)
             print(data_for_signature)
 
             signature = mlflow.models.infer_signature(
-                data_for_signature,full_pipeline.predict(data_for_signature)
+                data_for_signature, full_pipeline.predict(data_for_signature)
             )
 
             mlflow.sklearn.log_model(
-                full_pipeline, "transformer+RF_regressor_model",
-                signature=signature
-                )
+                full_pipeline, "transformer+RF_regressor_model", signature=signature
+            )
             mlflow.log_metrics(metrics_dict)
             save_model_info(
                 run.info.run_id,
