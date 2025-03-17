@@ -250,6 +250,8 @@ def save_data(train_df: pd.DataFrame, test_df: pd.DataFrame, path: str) -> None:
 
 def save_pipeline(pipe: Pipeline, path_to_save: str) -> None:
     try:
+        raw_data_path = os.path.join("./models")
+        os.makedirs(raw_data_path, exist_ok=True)
         with open(path_to_save, "wb") as f:
             pickle.dump(pipe, f)
         logger.debug("pipe.pkl saved")
@@ -268,6 +270,7 @@ def main() -> None:
             ct1, ct2, xtrain, xtest, ytrain, ytest
         )
         save_data(train_df, test_df, "./data")
+
         save_pipeline(pipe, "./models/pipe.pkl")
         logger.debug("main function executed successfully")
     except Exception as e:
