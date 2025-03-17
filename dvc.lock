@@ -1,16 +1,12 @@
 schema: '2.0'
 stages:
   data_ingestion:
-    cmd: python src/data/data_ingestion.py --input data/external/CLEANED_GMC_DIESEL.csv
+    cmd: python src/data/data_ingestion.py
     deps:
-    - path: data/GMC/CLEANED_GMC_DIESEL.csv
-      hash: md5
-      md5: 6962b2e1c12c0afd1ffd77cacc60e484
-      size: 2773475
     - path: src/data/data_ingestion.py
       hash: md5
-      md5: e3a90253dbaf6b6e31613210119079a4
-      size: 2174
+      md5: 28ad558fe259442d8f0a634761512426
+      size: 2260
     outs:
     - path: data/raw
       hash: md5
@@ -27,8 +23,8 @@ stages:
       nfiles: 1
     - path: src/features/feature_processing.py
       hash: md5
-      md5: 4b23313f7058cbeb80feda2b1ae7e6ad
-      size: 9771
+      md5: 6904cbe627334fdc2d63dcb0e7320f6e
+      size: 9874
     params:
       params.yaml:
         feature_processing.test_size: 0.34

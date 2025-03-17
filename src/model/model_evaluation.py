@@ -9,6 +9,7 @@ import os
 import mlflow
 from sklearn.pipeline import Pipeline
 import mlflow.sklearn
+import dagshub
 
 logger = logging.getLogger(os.path.basename(__file__))
 logger.setLevel("DEBUG")
@@ -109,7 +110,6 @@ def save_model_info(run_id: str, model_name: str, file_path: str) -> None:
 
 def main() -> None:
     try:
-
         dagshub_token = os.getenv("DAGSHUB_TOKEN")
         if not dagshub_token:
             raise EnvironmentError("dagshub token not found in model_evaluation.py")

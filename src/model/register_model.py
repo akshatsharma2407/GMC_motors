@@ -2,6 +2,7 @@ import mlflow
 import logging
 import json
 import os
+import dagshub
 
 logger = logging.getLogger(os.path.basename(__file__))
 logger.setLevel("DEBUG")
@@ -27,6 +28,8 @@ if not dagshub_token:
 
 os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
 os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
+
+mlflow.set_tracking_uri("https://dagshub.com/akshatsharma2407/GMC_motors.mlflow")
 
 
 def load_model_info(file_path: str) -> dict:
