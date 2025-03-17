@@ -35,13 +35,13 @@ jobs:
   
   project_testing:
     needs: linting
-    
+
     runs-on: ${{ matrix.OS }}
 
     strategy:
       matrix:
-      OS: ['ubuntu-latest','windows-latest','macos-latest']
-      versions: ['3.9','3.10','3.11']
+        OS: ['ubuntu-latest','windows-latest','macos-latest']
+        versions: ['3.9','3.10','3.11']
     
     steps:
       - name: code checkout

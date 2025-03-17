@@ -10,7 +10,6 @@ import mlflow
 import dagshub
 from sklearn.pipeline import Pipeline
 import mlflow.sklearn
-import numpy as np
 
 logger = logging.getLogger(os.path.basename(__file__))
 logger.setLevel("DEBUG")
@@ -135,7 +134,7 @@ def main() -> None:
 
             save_metrics("reports/metrics.json", metrics_dict)
 
-            data_for_signature = pd.read_csv('C:/Users/aksha/OneDrive/Desktop/GMC_MLOPS/data/raw/GMC_DATA.csv').head(1)
+            data_for_signature = pd.read_csv('GMC_MLOPS/data/raw/GMC_DATA.csv').head(1)
             data_for_signature["AGE OF CAR"] = data_for_signature["AGE OF CAR"].astype(str)
             data_for_signature["MODEL"] = data_for_signature["MODEL"].astype(str)
             data_for_signature.drop(columns='PRICE($)',inplace=True)
@@ -145,7 +144,10 @@ def main() -> None:
                 data_for_signature,full_pipeline.predict(data_for_signature)
             )
 
-            mlflow.sklearn.log_model(full_pipeline, "transformer+RF_regressor_model",signature=signature)
+            mlflow.sklearn.log_model(
+                full_pipeline, "transformer+RF_regressor_model",
+                signature=signature
+                )
             mlflow.log_metrics(metrics_dict)
             save_model_info(
                 run.info.run_id,
