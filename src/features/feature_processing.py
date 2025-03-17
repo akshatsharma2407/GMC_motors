@@ -261,7 +261,7 @@ def save_pipeline(pipe: Pipeline, path_to_save: str) -> None:
 def main() -> None:
     try:
         test_size = load_params("params.yaml")
-        df = load_data("data/raw/GMC_DATA.csv")
+        df = load_data("./data/raw/GMC_DATA.csv")
         xtrain, xtest, ytrain, ytest = splitting_data(df, test_size)
         ct1, ct2 = ColumnTransformers()
         pipe, train_df, test_df = CreatingAndExexutingPipeline(

@@ -50,6 +50,19 @@ jobs:
       - name: install dependencies
         run: |
           pip install -r requirements.txt
+
+      - name: configure aws credentials
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        
+        run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set region ap-southeast-2
+      
+      - name: Pull data from s3
+        run : dvc pull
       
       - name: run pipeline
         run : |

@@ -132,7 +132,7 @@ def main() -> None:
 
             save_metrics("reports/metrics.json", metrics_dict)
 
-            data_for_signature = pd.read_csv("GMC_MLOPS/data/raw/GMC_DATA.csv").head(1)
+            data_for_signature = pd.read_csv("./data/raw/GMC_DATA.csv").head(1)
             data_for_signature["AGE OF CAR"] = data_for_signature["AGE OF CAR"].astype(
                 str
             )

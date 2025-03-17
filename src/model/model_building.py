@@ -85,7 +85,7 @@ def save_model(model: BaseEstimator, path: str) -> None:
 def main() -> None:
     try:
         params = load_params("params.yaml")
-        train_data = load_data("data/processed/train_processed_df.csv")
+        train_data = load_data("./data/processed/train_processed_df.csv")
         model = trainingRandomForest(train_data, params)
         save_model(model, "models/RandomForest.pkl")
         logger.debug("main function executed")
