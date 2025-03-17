@@ -61,7 +61,7 @@ def save_data(df: pd.DataFrame) -> None:
 
 def main() -> None:
     try:
-        df = load_data("./data/GMC/CLEANED_GMC_DIESEL.csv")
+        df = load_data('https://raw.githubusercontent.com/akshatsharma2407/GMC/refs/heads/master/CLEANED_GMC_DIESEL.csv')
         df_cleaned = preprocessing(df)
         save_data(df_cleaned)
         logger.debug("main funciton executed successfully")
