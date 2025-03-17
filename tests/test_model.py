@@ -64,7 +64,7 @@ class TestModelLoading(unittest.TestCase):
         input_df = self.pipe.transform(input_text)
 
         # Verify the input shape
-        self.assertEqual(input_df.shape[1], len(self.transform.get_feature_names_out()))
+        self.assertEqual(input_df.shape[1], len(self.pipe.get_feature_names_out()))
 
         prediction = self.new_model.predict(input_text)
 
