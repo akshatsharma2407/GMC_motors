@@ -3,10 +3,16 @@ import mlflow
 from mlflow.tracking import MlflowClient
 import dagshub
 import pandas as pd
+import os
 
 app = Flask(__name__)
 
-dagshub.init(repo_owner="akshatsharma2407", repo_name="GMC_motors", mlflow=True)
+dagshub_token = os.getenv("DAGSHUB_TOKEN")
+if not dagshub_token:
+    raise EnvironmentError("dagshub token environment variable is not set")
+
+os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
+os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
 
 mlflow.set_tracking_uri("https://dagshub.com/akshatsharma2407/GMC_motors.mlflow")
 
