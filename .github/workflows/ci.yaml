@@ -19,7 +19,7 @@ jobs:
       - name: code checkout
         uses: actions/checkout@v3
       
-      - name: set up repository
+      - name: set up python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.versions }}
@@ -32,3 +32,30 @@ jobs:
       - name : run flake8
         run : |
              flake8 src/ --config .flake8
+  
+  project_testing:
+    needs: linting
+    
+    runs-on: ${{ matrix.OS }}
+
+    strategy:
+      matrix:
+      OS: ['ubuntu-latest','windows-latest','macos-latest']
+      versions: ['3.9','3.10','3.11']
+    
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v3
+      
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.versions }}
+      
+      - name: install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: run pipeline
+        run : |
+          dvc repro
