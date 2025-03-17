@@ -59,5 +59,4 @@ def predict():
 
         return str(int(prediction[0]))
 
-if __name__ == '__main__' and not os.getenv("GITHUB_ACTIONS"):
-    app.run(debug=True)
+app.run(debug=True)
