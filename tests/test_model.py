@@ -4,7 +4,7 @@ import unittest
 import mlflow
 import os
 import pandas as pd
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import pickle
 import numpy as np
 
@@ -33,7 +33,8 @@ class TestModelLoading(unittest.TestCase):
         cls.new_model_uri = f'models:/{cls.new_model_name}/{cls.new_model_version}'
         cls.new_model = mlflow.pyfunc.load_model(cls.new_model_uri)
 
-        cls.pipe = pickle.load(open('models/pipe.pkl', 'rb'))
+        with open('models/pipe.pkl', 'rb') as f:
+            cls.pipe = pickle.load(f)
 
         # Load holdout test data
         cls.holdout_data = pd.read_csv('data/raw/GMC_DATA.csv').sample(100)
@@ -83,22 +84,17 @@ class TestModelLoading(unittest.TestCase):
         y_pred_new = self.new_model.predict(X_holdout)
 
         # Calculate performance metrics for the new model
-        accuracy_new = accuracy_score(y_holdout, y_pred_new)
-        precision_new = precision_score(y_holdout, y_pred_new)
-        recall_new = recall_score(y_holdout, y_pred_new)
-        f1_new = f1_score(y_holdout, y_pred_new)
+        r2 = r2_score(y_holdout, y_pred_new)
+        mae = mean_absolute_error(y_holdout, y_pred_new)
+        mse = mean_squared_error(y_holdout, y_pred_new)
 
-        # Define expected thresholds for the performance metrics
-        expected_accuracy = 0.80
-        expected_precision = 0.80
-        expected_recall = 0.80
-        expected_f1 = 0.80
+        expected_r2 = 0.80
+        expected_mae = 15000 
+        expected_mse = 15000*15000  
 
-        # Assert that the new model meets the performance thresholds
-        self.assertGreaterEqual(accuracy_new, expected_accuracy, f'Accuracy should be at least {expected_accuracy}')
-        self.assertGreaterEqual(precision_new, expected_precision, f'Precision should be at least {expected_precision}')
-        self.assertGreaterEqual(recall_new, expected_recall, f'Recall should be at least {expected_recall}')
-        self.assertGreaterEqual(f1_new, expected_f1, f'F1 score should be at least {expected_f1}')
+        self.assertGreaterEqual(r2, expected_r2, f'R² should be at least {expected_r2}')
+        self.assertLessEqual(mae, expected_mae, f'MAE should be at most {expected_mae}')
+        self.assertLessEqual(mse, expected_mse, f'MSE should be at most {expected_mse}')
 
 if __name__ == "__main__":
     unittest.main()
