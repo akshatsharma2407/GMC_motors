@@ -74,6 +74,8 @@ class TestModelLoading(unittest.TestCase):
 
     def test_model_performance(self):
         # Extract features and labels from holdout test data
+        self.holdout_data['MODEL'] = self.holdout_data['MODEL'].astype(str)
+        self.holdout_data['AGE OF CAR'] = self.holdout_data['AGE OF CAR'].astype(str)
         X_holdout = self.holdout_data.drop(columns='PRICE($)')
         y_holdout = self.holdout_data['PRICE($)']
 
