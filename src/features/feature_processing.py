@@ -222,8 +222,11 @@ def CreatingAndExexutingPipeline(
         xtrain_trans["Price($)"] = ytrain
         xtest_trans["Price($)"] = ytest
         logger.debug("creation and execution of pipeline done")
-        return pipe,xtrain_trans,xtest_trans
-         # now xtrain_trans is train_df,  xtest_trans is test_df
+        return (
+            pipe,
+            xtrain_trans,
+            xtest_trans,
+        )  # now xtrain_trans is train_df,  xtest_trans is test_df
     except Exception as e:
         logger.error("some error occured while creating and executing pipeline ", e)
         raise
