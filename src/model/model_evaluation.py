@@ -98,7 +98,7 @@ def save_metrics(path: str, metrics_dict: dict) -> None:
 def save_model_info(run_id: str, model_name: str, file_path: str) -> None:
     try:
         model_info = {"run_id": run_id, "model_path": model_name}
-        print(model_info,'='*500)
+        print(model_info, "=" * 500)
         with open(file_path, "w") as f:
             json.dump(model_info, f, indent=4)
         logger.debug("model info saved")

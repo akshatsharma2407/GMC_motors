@@ -87,7 +87,7 @@ def add_descr_tags(model_name, model_version, description, author_name):
 def main():
     try:
         model_info = load_model_info("reports/exp_info.json")
-        print(model_info,'='*500)
+        print(model_info, "=" * 500)
         model_uri = create_uri(model_info["run_id"], model_info["model_path"])
         model_version, model_name = register_model(model_uri, "GMC_MODEL")
         add_descr_tags(
