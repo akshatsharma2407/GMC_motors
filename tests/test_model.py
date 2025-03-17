@@ -33,7 +33,6 @@ class TestModelLoading(unittest.TestCase):
         cls.new_model_uri = f'models:/{cls.new_model_name}/{cls.new_model_version}'
         cls.new_model = mlflow.pyfunc.load_model(cls.new_model_uri)
 
-        # Load the vectorizer
         cls.pipe = pickle.load(open('models/pipe.pkl', 'rb'))
 
         # Load holdout test data
@@ -48,30 +47,30 @@ class TestModelLoading(unittest.TestCase):
     def test_model_loaded_properly(self):
         self.assertIsNotNone(self.new_model)
 
-    # def test_model_signature(self):
-    #     # Create a dummy input for the model based on expected input shape
-    #     # input_text = np.array(['GMC Sierra 3500 Denali','Sierra 3500','2024','New',0,'0',3.1,507.0,'Kunes Chevrolet GMC of Elkhorn','Elkhorn','Wisconsin']).reshape(1,-1)
+    def test_model_signature(self):
+        # Create a dummy input for the model based on expected input shape
+        # input_text = np.array(['GMC Sierra 3500 Denali','Sierra 3500','2024','New',0,'0',3.1,507.0,'Kunes Chevrolet GMC of Elkhorn','Elkhorn','Wisconsin']).reshape(1,-1)
 
-    #     columns = [
-    #         "CAR NAME", "MODEL/CLASS", "MODEL", "STOCK TYPE", "MILEAGE", "AGE OF CAR", 
-    #         "RATING", "REVIEW", "DEALER NAME", "DEALER LOCATION (CITY)", "DEALER LOCATION (STATE)"
-    #     ]
+        columns = [
+            "CAR NAME", "MODEL/CLASS", "MODEL", "STOCK TYPE", "MILEAGE", "AGE OF CAR", 
+            "RATING", "REVIEW", "DEALER NAME", "DEALER LOCATION (CITY)", "DEALER LOCATION (STATE)"
+        ]
 
-    #     input_text = pd.DataFrame([
-    #         ['GMC Sierra 3500 Denali', 'Sierra 3500', '2024', 'New', 0, '0', 3.1, 507.0, 
-    #         'Kunes Chevrolet GMC of Elkhorn', 'Elkhorn', 'Wisconsin']
-    #     ], columns=columns)
+        input_text = pd.DataFrame([
+            ['GMC Sierra 3500 Denali', 'Sierra 3500', '2024', 'New', 0, '0', 3.1, 507.0, 
+            'Kunes Chevrolet GMC of Elkhorn', 'Elkhorn', 'Wisconsin']
+        ], columns=columns)
 
-    #     input_df = self.pipe.transform(input_text)
+        input_df = self.pipe.transform(input_text)
 
-    #     # Verify the input shape
-    #     self.assertEqual(input_df.shape[1], len(self.transform.get_feature_names_out()))
+        # Verify the input shape
+        self.assertEqual(input_df.shape[1], len(self.transform.get_feature_names_out()))
 
-    #     prediction = self.new_model.predict(input_text)
+        prediction = self.new_model.predict(input_text)
 
-    #     # Verify the output shape (assuming regression with a single output)
-    #     self.assertEqual(len(prediction), input_df.shape[0])
-    #     self.assertEqual(len(prediction.shape), 1)  # Assuming a single output column
+        # Verify the output shape (assuming regression with a single output)
+        self.assertEqual(len(prediction), input_df.shape[0])
+        self.assertEqual(len(prediction.shape), 1)  # Assuming a single output column
 
     # def test_model_performance(self):
     #     # Extract features and labels from holdout test data
