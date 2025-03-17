@@ -7,7 +7,6 @@ from sklearn.base import BaseEstimator
 import logging
 import os
 import mlflow
-import dagshub
 from sklearn.pipeline import Pipeline
 import mlflow.sklearn
 
@@ -110,13 +109,13 @@ def save_model_info(run_id: str, model_name: str, file_path: str) -> None:
 def main() -> None:
     try:
 
-        dagshub_token = os.getenv('DAGSHUB_TOKEN')
+        dagshub_token = os.getenv("DAGSHUB_TOKEN")
         if not dagshub_token:
-            raise EnvironmentError('dagshub token not found in model_evaluation.py')
-        
-        os.environ['MLFLOW_TRACKING_USERNAME'] = dagshub_token
-        os.environ['MLFLOW_TRACKING_PASSWORD'] = dagshub_token
-        
+            raise EnvironmentError("dagshub token not found in model_evaluation.py")
+
+        os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
+        os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
+
         mlflow.set_tracking_uri(
             "https://dagshub.com/akshatsharma2407/GMC_motors.mlflow"
         )
