@@ -26,7 +26,7 @@ class FlaskAppTests(unittest.TestCase):
         ], columns=columns)
 
         # Send a POST request to the prediction endpoint
-        response = self.client.post('/predict', json=input_text.to_dict(orient='records'))
+        response = self.client.post("http://127.0.0.1:5000/predict", json=input_text.to_dict(orient='records'))
 
         # Check if the response is successful (HTTP 200 OK)
         self.assertEqual(response.status_code, 200)
