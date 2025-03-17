@@ -9,7 +9,6 @@ import os
 import mlflow
 from sklearn.pipeline import Pipeline
 import mlflow.sklearn
-import dagshub
 
 logger = logging.getLogger(os.path.basename(__file__))
 logger.setLevel("DEBUG")

@@ -2,7 +2,6 @@ import mlflow
 import logging
 import json
 import os
-import dagshub
 
 logger = logging.getLogger(os.path.basename(__file__))
 logger.setLevel("DEBUG")
