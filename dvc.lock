@@ -1,12 +1,16 @@
 schema: '2.0'
 stages:
   data_ingestion:
-    cmd: python src/data/data_ingestion.py
+    cmd: python src/data/data_ingestion.py --input data/external/CLEANED_GMC_DIESEL.csv
     deps:
+    - path: data/GMC/CLEANED_GMC_DIESEL.csv
+      hash: md5
+      md5: 6962b2e1c12c0afd1ffd77cacc60e484
+      size: 2773475
     - path: src/data/data_ingestion.py
       hash: md5
-      md5: 2c77cbebfa59fb2f20364c7a232bf70a
-      size: 2179
+      md5: e3a90253dbaf6b6e31613210119079a4
+      size: 2174
     outs:
     - path: data/raw
       hash: md5
@@ -86,7 +90,7 @@ stages:
     outs:
     - path: reports/exp_info.json
       hash: md5
-      md5: 43b12ad89ce8d11110888b6f4d425f8e
+      md5: d60b97429376560c81b5b84920e4ef26
       size: 107
     - path: reports/metrics.json
       hash: md5
@@ -97,7 +101,7 @@ stages:
     deps:
     - path: reports/exp_info.json
       hash: md5
-      md5: 43b12ad89ce8d11110888b6f4d425f8e
+      md5: d60b97429376560c81b5b84920e4ef26
       size: 107
     - path: src/model/register_model.py
       hash: md5

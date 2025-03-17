@@ -1,8 +1,9 @@
 stages:
   data_ingestion:
-    cmd: python src/data/data_ingestion.py
+    cmd: python src/data/data_ingestion.py --input data/external/CLEANED_GMC_DIESEL.csv
     deps:
     - src/data/data_ingestion.py
+    - data/GMC/CLEANED_GMC_DIESEL.csv
     outs:
     - data/raw
   feature_processing:
