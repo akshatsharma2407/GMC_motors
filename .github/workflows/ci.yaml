@@ -84,17 +84,17 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} 
-      
+
       - name: Build Docker Image
         if: success()
         run: |
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/gmc1:latest .
-        
-      - name: Push Docker image to docker hub
+
+      - name: Push Docker image to Docker Hub
         if: success()
         run: |
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/gmc1:latest
-      
+
       - name: Deploy to EC2
         if: success()
         uses: appleboy/ssh-action@v0.1.5
@@ -106,6 +106,6 @@ jobs:
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gmc1:latest
             docker stop my-app || true
             docker rm my-app || true
-            docker run -p 80:5000 \
-              -e DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }} \ 
+            docker run -d --name my-app -p 80:5000 \
+              -e DAGSHUB_TOKEN="${{ secrets.DAGSHUB_TOKEN }}" \
               ${{ secrets.DOCKER_HUB_USERNAME }}/gmc1:latest
