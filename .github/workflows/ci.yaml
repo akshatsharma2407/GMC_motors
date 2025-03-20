@@ -106,6 +106,6 @@ jobs:
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gmc1:latest
             docker stop my-app || true
             docker rm my-app || true
-            docker run -p 80:5000 --name my-app \
+            docker run -p 80:5000 \
               -e DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }} \ 
               ${{ secrets.DOCKER_HUB_USERNAME }}/gmc1:latest
