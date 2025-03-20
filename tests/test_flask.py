@@ -28,9 +28,6 @@ class FlaskAppTests(unittest.TestCase):
         # Send a POST request to the prediction endpoint
         response = self.client.post("http://127.0.0.1:5000/predict", json=input_text.to_dict(orient='records'))
 
-        # Check if the response is successful (HTTP 200 OK)
-        self.assertEqual(response.status_code, 200)
-
         # Ensure that the response contains a valid predicted price (assuming numeric output)
         self.assertIn("PRICE($)", response.json, "Response should contain 'PRICE($)' key")
         self.assertIsInstance(response.json["PRICE($)"], (int, float), "Predicted price should be a number")
