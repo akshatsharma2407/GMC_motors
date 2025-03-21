@@ -7,39 +7,42 @@ on:
 
 jobs:
   linting:
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-latest'
 
     steps:
-      - name: Checkout code
+
+      - name: code checkout
         uses: actions/checkout@v3
       
-      - name: Set up Python
+      - name: set up python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
       
-      - name: Install flake8
-        run: |
-          python -m pip install --upgrade pip
-          pip install --no-cache-dir flake8
+      - name : install flake8
+        run : |
+            python -m pip install --upgrade pip
+            pip install flake8
       
-      - name: Run flake8
-        run: flake8 src/ --config .flake8
-
+      - name : run flake8
+        run : |
+             flake8 src/ --config .flake8
+  
   project_testing:
     needs: linting
-    runs-on: ubuntu-latest
+
+    runs-on: 'ubuntu-latest'
     
     steps:
-      - name: Checkout code
+      - name: code checkout
         uses: actions/checkout@v3
       
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: setup python
+        uses: actions/setup-python@v2
         with:
           python-version: '3.11'
       
-      - name: Cache pip dependencies
+      - name: cache pip dependencies
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
@@ -47,41 +50,50 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
       
-      - name: Install dependencies
-        run: pip install --no-cache-dir -r requirements.txt
+      - name: install dependencies
+        run: |
+          pip install -r requirements.txt
       
-      - name: Run pipeline
+      - name: run pipeline
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
-        run: dvc repro
-      
+        run : |
+          dvc repro
+
       - name: Run model tests
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
-        run: python -m unittest tests/test_model.py
+        run: |
+          python -m unittest tests/test_model.py
       
-      - name: Promote model to production
+      - name: promote model to production
         if: success()
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
         run: python scripts/promote_model
       
-      - name: Run Flask app tests
+      - name: Run flask app tests
         if: success()
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
         run: python -m unittest tests/test_flask.py
       
-      - name: Login to AWS ECR
-        run: |
+      - name: login to AWS ECR
+        run:  |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com
       
-      - name: Build and push optimized Docker image
+      - name: Build docker image
         run: |
-          DOCKER_BUILDKIT=1 docker build --no-cache -t gmc_ecr_ci .
+          docker build -t gmc_ecr_ci .
+      
+      - name: Tag Docker image
+        run: |
           docker tag gmc_ecr_ci:latest 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
+      
+      - name: push docker image to ecr
+        run: |
           docker push 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
       
       - name: Deploy to EC2
@@ -99,6 +111,4 @@ jobs:
             docker pull 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
             docker stop my-app || true
             docker rm my-app || true
-            docker run -d --rm --name my-app -p 80:5000 \
-              -e DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }} \
-              851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
+            docker run -d -p 80:5000 -e DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }} --name my-app 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
