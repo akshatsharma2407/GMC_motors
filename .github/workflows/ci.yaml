@@ -111,4 +111,4 @@ jobs:
             docker pull 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
             docker stop my-app || true
             docker rm my-app || true
-            docker run -d -p -e DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }} --name my-app 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
+            docker run -d -p 80:5000 -e DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }} --name my-app 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
