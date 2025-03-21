@@ -77,24 +77,25 @@ jobs:
         env:
           DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
         run: python -m unittest tests/test_flask.py
-
-      - name: Log in to Docker Hub
-        if: success()
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} 
-
-      - name: Build Docker Image
-        if: success()
+      
+      - name: login to AWS ECR
+        run:  |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com
+      
+      - name: Build docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/gmc1:latest .
-
-      - name: Push Docker image to Docker Hub
-        if: success()
+          docker build -t gmc_ecr_ci .
+      
+      - name: Tag Docker image
         run: |
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/gmc1:latest
-
+          docker tag gmc_ecr_ci:latest 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
+      
+      - name: push docker image to ecr
+        run: |
+          docker push 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
+      
       - name: Deploy to EC2
         if: success()
         uses: appleboy/ssh-action@v0.1.5
@@ -103,9 +104,11 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gmc1:latest
+            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws configure set default.region ap-southeast-2
+            aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com
+            docker pull 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
             docker stop my-app || true
             docker rm my-app || true
-            docker run -d --name my-app -p 80:5000 \
-              -e DAGSHUB_TOKEN="${{ secrets.DAGSHUB_TOKEN }}" \
-              ${{ secrets.DOCKER_HUB_USERNAME }}/gmc1:latest
+            docker run -d -p -e DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }} --name my-app 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
