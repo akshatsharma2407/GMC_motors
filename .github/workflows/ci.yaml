@@ -82,19 +82,19 @@ jobs:
         run:  |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 851725541946.dkr.ecr.ap-south-1.amazonaws.com
       
       - name: Build docker image
         run: |
-          docker build -t gmc_ecr_ci .
+          docker build -t gmcdocker .
       
       - name: Tag Docker image
         run: |
-          docker tag gmc_ecr_ci:latest 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
+          docker tag gmcdocker:latest 851725541946.dkr.ecr.ap-south-1.amazonaws.com/gmcdocker:latest
       
       - name: push docker image to ecr
         run: |
-          docker push 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
+          docker push 851725541946.dkr.ecr.ap-south-1.amazonaws.com/gmcdocker:latest
       
       - name: Deploy to EC2
         if: success()
@@ -106,10 +106,10 @@ jobs:
           script: |
             aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws configure set default.region ap-southeast-2
-            aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com
-            docker pull 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
+            aws configure set default.region ap-south-1
+            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 851725541946.dkr.ecr.ap-south-1.amazonaws.com
+            docker pull 851725541946.dkr.ecr.ap-south-1.amazonaws.com/gmcdocker:latest
             docker stop my-app || true
             docker rm my-app || true
-            docker run -d -p 80:5000 -e DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }} --name my-app 851725541946.dkr.ecr.ap-southeast-2.amazonaws.com/gmc_ecr_ci:latest
+            docker run -d -p 80:5000 -e DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }} --name my-app 851725541946.dkr.ecr.ap-south-1.amazonaws.com/gmcdocker:latest
             
