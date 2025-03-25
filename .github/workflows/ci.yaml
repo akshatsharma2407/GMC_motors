@@ -114,7 +114,7 @@ jobs:
           aws deploy create-deployment \
             --application-name dockerappwithcodedeploy \
             --deployment-config-name CodeDeployDefault.OneAtATime \
-            --deployment-group-name Mydeploymentgroupbluegreen \
+            --deployment-group-name codedeployDeploymentGroup \
             --s3-location bucket=gmccodedeployservice,key=deployment.zip,bundleType=zip \
             --file-exists-behavior OVERWRITE \
             --region ap-south-1
